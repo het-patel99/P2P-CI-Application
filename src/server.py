@@ -2,14 +2,15 @@ import socket
 from multiprocessing import Lock
 from threading import Thread
 
+
 rfc = {}
 clients = []
 rfc_lock = Lock()
 client_lock = Lock()
 
-supported_version = "P2P-CI/1.0"
+supported_version = "P2P-CI-v1.0.0"
 server_port = 7734
-server_ip = "10.2.1.223"
+server_ip = socket.gethostbyname(socket.gethostname())
 
 status_codes = {
     200 : "OK",
@@ -22,8 +23,8 @@ def handle_client(connection, client_address):
 
     try:
         while True:
-            client_request = connection.recv(4096)
-            client_message = client_request.decode()
+            client_request = connection.recv(65000)
+            client_message = client_request.decode("utf-8")
             client_message = client_message.split("\n")
             client_message_header = client_message[0].split(" ")
             method = client_message_header[0]
@@ -59,7 +60,7 @@ def handle_client(connection, client_address):
                 
                 response_message = client_version + " " + str(status_code) + " " + status_message + "\n"
                 response_message = response_message + "RFC " + str(rfc_number) + " " + rfc_title + " " + client_host_name + " " + str(client_port_number) + "\n"
-                connection.send(response_message.encode())
+                connection.send(response_message.encode("utf-8"))
 
             elif method == "LOOKUP":
                 rfc_number = client_message_header[2]
@@ -88,7 +89,7 @@ def handle_client(connection, client_address):
                 response_message = client_version + " " + str(status_code) + " " + status_message + "\n"
                 response_message = response_message + client_details
 
-                connection.send(response_message.encode())
+                connection.send(response_message.encode("utf-8"))
 
             elif method == "LIST":
                 client_version = client_message_header[2]
@@ -111,12 +112,12 @@ def handle_client(connection, client_address):
                 response_message = client_version + " " + str(status_code) + " " + status_message + "\n"
                 response_message = response_message + client_details
 
-                connection.send(response_message.encode())
+                connection.send(response_message.encode("utf-8"))
     except:
         status_code = 400
         status_message = status_codes[status_code]
         response_message = client_version + " " + status_code + " " + status_message + "\n"
-        connection.send(response_message.encode())
+        connection.send(response_message.encode("utf-8"))
 
     finally:
 
@@ -148,4 +149,4 @@ if __name__ == '__main__':
         process = Thread(target = handle_client, args = (connection,client_address))
         threads.append(process)
         process.start()
-        print("Client Connected: "+client_address)
+        print("Client Connected: ",client_address)
