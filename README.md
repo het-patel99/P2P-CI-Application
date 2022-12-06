@@ -4,7 +4,6 @@ This is a Peer-to-Peer application where all the peers have their own rfc files.
 
 ## Steps to run
 
-### Method - 1 ()
 1. Download .zip file of this project and extract. OR Git clone "https://github.com/het-patel99/P2P-CI-Application.git".
 2. Create a copy of extracted file in different directory OR clone again into different directory.
 3. Separate some rfc files from the rfcs folder, select any 2-3 files and paste that into rfcs folder of the copy project. (Ex. there are total 1,2,3,4,5,6 rfc files originally. We have downloaded zip in 2 different directory, hence 1st directories rfcs folder will contain 1,2,3,4 rfc files and 2nd directories folder will have 5,6 rfc file. Remove accordingly.
